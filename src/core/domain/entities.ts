@@ -1,7 +1,7 @@
 export interface Weather {
   current: {
     temperature: number;
-    condition: string; // e.g., "Sunny", "Cloudy"
+    condition: string;
     windSpeed: number;
     windDirection: string;
     humidity: number;
@@ -13,6 +13,14 @@ export interface Weather {
   };
   daily: DailyForecast[];
   hourly: HourlyForecast[];
+  airQuality?: AirQuality; // Added Air Quality
+}
+
+export interface AirQuality {
+  aqi: number; // US AQI or European AQI
+  pm10: number;
+  pm2_5: number;
+  description: string;
 }
 
 export interface DailyForecast {

@@ -1,20 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { GetWeatherUseCase } from "@/core/application";
-import { OpenMeteoWeatherRepository } from "@/infrastructure/repositories";
+import { GetWeatherUseCase, GetAirQualityUseCase } from "@/core/application";
+import { OpenMeteoWeatherRepository, OpenMeteoAirQualityRepository } from "@/infrastructure/repositories";
 
 const weatherRepository = new OpenMeteoWeatherRepository();
+const aqRepository = new OpenMeteoAirQualityRepository();
 const getWeatherUseCase = new GetWeatherUseCase(weatherRepository);
+const getAQUseCase = new GetAirQualityUseCase(aqRepository);
 
 const weatherSchema = z.object({
-  lat: z.coerce
-    .number()
-    .min(-90, "Latitude must be between -90 and 90")
-    .max(90, "Latitude must be between -90 and 90"),
-  lon: z.coerce
-    .number()
-    .min(-180, "Longitude must be between -180 and 180")
-    .max(180, "Longitude must be between -180 and 180"),
+  lat: z.coerce.number().min(-90).max(90),
+  lon: z.coerce.number().min(-180).max(180),
 });
 
 export async function GET(request: NextRequest) {
@@ -34,7 +30,15 @@ export async function GET(request: NextRequest) {
   const { lat, lon } = validation.data;
 
   try {
-    const weather = await getWeatherUseCase.execute(lat, lon);
+    const [weather, aq] = await Promise.all([
+        getWeatherUseCase.execute(lat, lon),
+        getAQUseCase.execute(lat, lon).catch(() => undefined) // Optional AQ
+    ]);
+
+    if (aq) {
+        weather.airQuality = aq;
+    }
+
     return NextResponse.json(weather);
   } catch (error) {
     console.error("Weather API Error:", error);

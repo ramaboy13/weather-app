@@ -1,5 +1,5 @@
-import { GetWeatherUseCase, SearchLocationUseCase } from "@/core/application";
-import { ILocationRepository, IWeatherRepository, Weather } from "@/core/domain";
+import { GetWeatherUseCase, SearchLocationUseCase, GetAirQualityUseCase } from "@/core/application";
+import { ILocationRepository, IWeatherRepository, IAirQualityRepository, Weather, AirQuality } from "@/core/domain";
 import { OpenMeteoWeatherRepository } from "@/infrastructure/repositories";
 
 // Mock Repositories
@@ -19,12 +19,23 @@ const mockWeather: Weather = {
   hourly: [],
 };
 
+const mockAQ: AirQuality = {
+    aqi: 50,
+    pm10: 20,
+    pm2_5: 10,
+    description: "Good"
+};
+
 const mockWeatherRepository: IWeatherRepository = {
   getWeather: jest.fn().mockResolvedValue(mockWeather),
 };
 
 const mockLocationRepository: ILocationRepository = {
   search: jest.fn().mockResolvedValue([{ id: "1", name: "Test City", region: "TR", country: "Testland", latitude: 0, longitude: 0 }]),
+};
+
+const mockAQRepository: IAirQualityRepository = {
+    getAirQuality: jest.fn().mockResolvedValue(mockAQ)
 };
 
 describe("Backend Clean Architecture", () => {
@@ -45,6 +56,15 @@ describe("Backend Clean Architecture", () => {
       expect(result).toHaveLength(1);
       expect(result[0].name).toBe("Test City");
     });
+  });
+
+  describe("GetAirQualityUseCase", () => {
+      it("should return aq data", async () => {
+          const useCase = new GetAirQualityUseCase(mockAQRepository);
+          const result = await useCase.execute(10, 10);
+          expect(mockAQRepository.getAirQuality).toHaveBeenCalledWith(10, 10);
+          expect(result.aqi).toBe(50);
+      });
   });
 
   describe("OpenMeteoWeatherRepository", () => {

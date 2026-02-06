@@ -1,11 +1,13 @@
 import {
+  AirQuality,
   DailyForecast,
-  HourlyForecast,
+  IAirQualityRepository,
   ILocationRepository,
   IWeatherRepository,
   Location,
   Weather,
 } from "../core/domain";
+import { API_URL_1, API_URL_2, API_URL_3 } from "@/lib/constants";
 
 // WMO Weather Code Mapper
 function mapWeatherCode(code: number): string {
@@ -30,7 +32,7 @@ export class OpenMeteoWeatherRepository implements IWeatherRepository {
       timezone: "auto",
     });
 
-    const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params.toString()}`);
+    const response = await fetch(`${API_URL_1}?${params.toString()}`);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch weather data: ${response.statusText}`);
@@ -60,13 +62,13 @@ export class OpenMeteoWeatherRepository implements IWeatherRepository {
         minTemp: daily.temperature_2m_min[index],
         condition: mapWeatherCode(daily.weather_code[index]),
         rainChance: daily.precipitation_probability_max[index],
-      })).slice(0, 7), // Next 7 days
+      })).slice(0, 7),
       hourly: hourly.time.map((time: string, index: number) => ({
         time: time,
         temperature: hourly.temperature_2m[index],
         condition: mapWeatherCode(hourly.weather_code[index]),
         rainChance: hourly.precipitation_probability[index],
-      })).slice(0, 24), // Next 24 hours
+      })).slice(0, 24),
     };
 
     return weather;
@@ -79,27 +81,64 @@ export class OpenMeteoWeatherRepository implements IWeatherRepository {
   }
 }
 
-export class MockLocationRepository implements ILocationRepository {
-  private locations: Location[] = [
-    { id: "1", name: "Seattle", region: "WA", country: "USA", latitude: 47.6062, longitude: -122.3321 },
-    { id: "2", name: "Sydney", region: "NSW", country: "Australia", latitude: -33.8688, longitude: 151.2093 },
-    { id: "3", name: "London", region: "", country: "UK", latitude: 51.5074, longitude: -0.1278 },
-    { id: "4", name: "New York", region: "NY", country: "USA", latitude: 40.7128, longitude: -74.0060 },
-    { id: "5", name: "Tokyo", region: "", country: "Japan", latitude: 35.6762, longitude: 139.6503 },
-    { id: "6", name: "Singapore", region: "", country: "Singapore", latitude: 1.3521, longitude: 103.8198 },
-    { id: "7", name: "Jakarta", region: "DKI", country: "Indonesia", latitude: -6.2088, longitude: 106.8456 },
-    { id: "8", name: "California", region: "CA", country: "USA", latitude: 36.7783, longitude: -119.4179 },
-    { id: "9", name: "Beijing", region: "", country: "China", latitude: 39.9042, longitude: 116.4074 },
-    { id: "10", name: "Jerusalem", region: "", country: "Israel", latitude: 31.7683, longitude: 35.2137 },
-  ];
-
+export class OpenMeteoGeocodingRepository implements ILocationRepository {
   async search(query: string): Promise<Location[]> {
-    if (!query) return [];
-    const lowerQuery = query.toLowerCase();
-    return this.locations.filter(
-      (loc) =>
-        loc.name.toLowerCase().includes(lowerQuery) ||
-        loc.country.toLowerCase().includes(lowerQuery)
-    );
+    const params = new URLSearchParams({
+      name: query,
+      count: "10",
+      language: "en",
+      format: "json",
+    });
+
+    const response = await fetch(`${API_URL_2}?${params.toString()}`);
+
+    if (!response.ok) {
+       // Fallback to empty if fails
+       console.error("Geocoding API failed");
+       return [];
+    }
+
+    const data = await response.json();
+    if (!data.results) return [];
+
+    return data.results.map((item: any) => ({
+      id: item.id.toString(),
+      name: item.name,
+      region: item.admin1 || "",
+      country: item.country,
+      latitude: item.latitude,
+      longitude: item.longitude,
+    }));
   }
+}
+
+export class OpenMeteoAirQualityRepository implements IAirQualityRepository {
+    async getAirQuality(latitude: number, longitude: number): Promise<AirQuality> {
+        const params = new URLSearchParams({
+            latitude: latitude.toString(),
+            longitude: longitude.toString(),
+            current: "us_aqi,pm10,pm2_5",
+            timezone: "auto"
+        });
+
+        const response = await fetch(`${API_URL_3}?${params.toString()}`);
+        if (!response.ok) throw new Error("Failed to fetch AQI");
+
+        const data = await response.json();
+        const current = data.current;
+
+        let description = "Good";
+        if (current.us_aqi > 50) description = "Moderate";
+        if (current.us_aqi > 100) description = "Unhealthy for Sensitive Groups";
+        if (current.us_aqi > 150) description = "Unhealthy";
+        if (current.us_aqi > 200) description = "Very Unhealthy";
+        if (current.us_aqi > 300) description = "Hazardous";
+
+        return {
+            aqi: current.us_aqi,
+            pm10: current.pm10,
+            pm2_5: current.pm2_5,
+            description
+        };
+    }
 }

@@ -12,6 +12,7 @@ jest.mock("next/navigation", () => ({
     push: jest.fn(),
     back: jest.fn(),
   }),
+  usePathname: () => "/",
 }));
 
 // Mock next-themes

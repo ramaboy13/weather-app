@@ -1,5 +1,6 @@
 import { HourlyForecast } from "@/core/domain";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface ForecastRowProps {
   hourly: HourlyForecast[];
@@ -9,16 +10,16 @@ export function ForecastRow({ hourly }: ForecastRowProps) {
   return (
     <div className="mb-8">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="font-semibold text-lg dark:text-white">Hourly Forecast</h3>
+        <Link href="/forecast" className="font-semibold text-lg dark:text-white hover:text-[#B2DAFF] transition-colors">Hourly Forecast</Link>
         <div className="flex bg-gray-100 dark:bg-[#1E1F29] rounded-lg p-1">
-          <button className="bg-white dark:bg-[#2B2D3A] shadow-sm text-xs px-3 py-1 rounded-md font-medium dark:text-white">Forecast</button>
-          <button className="text-gray-500 dark:text-gray-400 text-xs px-3 py-1 rounded-md font-medium hover:text-gray-900 dark:hover:text-white transition-colors">Air quality</button>
+          <Link href="/forecast" className="bg-white dark:bg-[#2B2D3A] shadow-sm text-xs px-3 py-1 rounded-md font-medium dark:text-white transition-colors">Forecast</Link>
+          <Link href="/details/air-quality" className="text-gray-500 dark:text-gray-400 text-xs px-3 py-1 rounded-md font-medium hover:text-gray-900 dark:hover:text-white transition-colors">Air quality</Link>
         </div>
       </div>
       <div className="flex gap-4 overflow-x-auto pb-4 hide-scroll -mx-6 px-6">
         {hourly.map((hour, i) => (
           <div key={i} className={cn(
-            "flex-shrink-0 w-16 rounded-3xl p-3 flex flex-col items-center justify-between h-28 border transition-all",
+            "flex-shrink-0 w-16 rounded-3xl p-3 flex flex-col items-center justify-between h-28 border transition-all cursor-default hover:scale-105",
             i === 0
               ? "bg-[#2B2D3A] text-white border-gray-700 shadow-lg transform scale-105"
               : "bg-white dark:bg-[#1E1F29] border-gray-100 dark:border-transparent"

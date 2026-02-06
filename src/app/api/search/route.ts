@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { SearchLocationUseCase } from "@/core/application";
-import { MockLocationRepository } from "@/infrastructure/repositories";
+import { OpenMeteoGeocodingRepository } from "@/infrastructure/repositories";
 
-const locationRepository = new MockLocationRepository();
+const locationRepository = new OpenMeteoGeocodingRepository();
 const searchLocationUseCase = new SearchLocationUseCase(locationRepository);
 
 const searchSchema = z.object({
