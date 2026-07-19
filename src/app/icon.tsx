@@ -20,8 +20,10 @@ export function generateImageMetadata() {
   ]
 }
  
-export default function Icon({ id }: { id: string }) {
-  const size = id === '192' ? 192 : id === '512' ? 512 : 32
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default function Icon(props: any) {
+  const id = props.id || props.params?.id || '192';
+  const size = id === '192' ? 192 : id === '512' ? 512 : 32;
   
   return new ImageResponse(
     (

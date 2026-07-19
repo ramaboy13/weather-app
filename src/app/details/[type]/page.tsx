@@ -4,7 +4,6 @@ import { use } from "react";
 import { Navigation } from "@/components/Navigation";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/components/language-provider";
-import { useLanguage } from "@/components/language-provider";
 import { motion } from "framer-motion";
 import { ArrowLeft, Wind, Droplets, MapPin } from "lucide-react";
 

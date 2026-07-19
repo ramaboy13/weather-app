@@ -5,16 +5,19 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useEffect, useState } from "react";
 
-// Fix leaflet icon
-const icon = L.icon({
-  iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
+// Fix leaflet icon (only on client)
+const getIcon = () => {
+  if (typeof window === "undefined") return undefined;
+  return L.icon({
+    iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
+    iconRetinaUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png",
+    shadowUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+  });
+};
 
 interface MapProps {
   lat: number;
@@ -62,11 +65,13 @@ export default function MapComponent({ lat, lon }: MapProps) {
            maxNativeZoom={7}
         />
       )}
-      <Marker position={[lat, lon]} icon={icon}>
-        <Popup>
-          Current Location
-        </Popup>
-      </Marker>
+      {typeof window !== "undefined" && getIcon() && (
+        <Marker position={[lat, lon]} icon={getIcon()!}>
+          <Popup>
+            Current Location
+          </Popup>
+        </Marker>
+      )}
     </MapContainer>
   );
 }
