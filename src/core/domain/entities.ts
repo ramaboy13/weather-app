@@ -8,16 +8,20 @@ export interface Weather {
     pressure: number;
     feelsLike: number;
     uvIndex?: number;
+    visibility?: number;
+    dewPoint?: number;
+    cloudCover?: number;
     isDay: boolean;
     time: string;
   };
   daily: DailyForecast[];
   hourly: HourlyForecast[];
-  airQuality?: AirQuality; // Added Air Quality
+  airQuality?: AirQuality;
+  astronomy?: Astronomy;
 }
 
 export interface AirQuality {
-  aqi: number; // US AQI or European AQI
+  aqi: number;
   pm10: number;
   pm2_5: number;
   description: string;
@@ -29,6 +33,9 @@ export interface DailyForecast {
   minTemp: number;
   condition: string;
   rainChance: number;
+  sunrise?: string;
+  sunset?: string;
+  uvIndexMax?: number;
 }
 
 export interface HourlyForecast {
@@ -36,6 +43,10 @@ export interface HourlyForecast {
   temperature: number;
   condition: string;
   rainChance: number;
+  humidity?: number;
+  windSpeed?: number;
+  visibility?: number;
+  cloudCover?: number;
 }
 
 export interface Location {
@@ -45,4 +56,12 @@ export interface Location {
   country: string;
   latitude: number;
   longitude: number;
+}
+
+export interface Astronomy {
+  sunrise: string;
+  sunset: string;
+  moonrise?: string;
+  moonset?: string;
+  moonPhase?: string;
 }

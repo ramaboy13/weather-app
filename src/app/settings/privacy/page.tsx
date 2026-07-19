@@ -1,13 +1,11 @@
 "use client";
 
-import { use } from "react";
 import { Navigation } from "@/components/Navigation";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/components/language-provider";
 import { motion } from "framer-motion";
 
-export default function DetailPage({ params }: { params: Promise<{ type: string }> }) {
-  const { type } = use(params);
+export default function PrivacyPolicyPage() {
   const router = useRouter();
   const { t } = useLanguage();
 
@@ -26,24 +24,29 @@ export default function DetailPage({ params }: { params: Promise<{ type: string 
             >
               <span className="material-icons text-gray-600 dark:text-gray-300 text-sm sm:text-base">arrow_back</span>
             </button>
-            <h1 className="font-semibold text-base sm:text-lg capitalize dark:text-white">{type} {t('details')}</h1>
+            <h1 className="font-semibold text-base sm:text-lg dark:text-white">{t('privacy_title')}</h1>
           </header>
 
           <main className="flex-1 p-4 sm:p-6 overflow-y-auto pb-24 hide-scroll">
-             <motion.div
-               initial={{ scale: 0.95, opacity: 0 }}
-               animate={{ scale: 1, opacity: 1 }}
-               transition={{ delay: 0.1 }}
-               className="bg-white dark:bg-[#1E1F29] rounded-[1.5rem] sm:rounded-[2rem] p-6 sm:p-8 shadow-sm text-center border border-gray-100 dark:border-transparent"
-             >
-                <span className="material-icons text-5xl sm:text-6xl text-[#B2DAFF] mb-4">
-                  {type === 'wind' ? 'air' : type === 'rain' ? 'water_drop' : 'location_on'}
-                </span>
-                <h2 className="text-xl sm:text-2xl font-bold mb-2 capitalize dark:text-white">{type}</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Detailed information about {type} will appear here. This is a placeholder for the {type} module.
-                </p>
-             </motion.div>
+            <div className="max-w-3xl mx-auto">
+              <p className="text-xs text-gray-400 mb-4 sm:mb-6">{t('privacy_last_updated')}</p>
+              <div className="prose prose-sm dark:prose-invert max-w-none">
+                {t('privacy_content').split('\n\n').map((paragraph, i) => {
+                  if (paragraph.match(/^\d+\./)) {
+                    const [title, ...rest] = paragraph.split('\n');
+                    return (
+                      <div key={i} className="mb-4 sm:mb-6">
+                        <h3 className="font-semibold text-sm sm:text-base dark:text-white mb-2">{title}</h3>
+                        {rest.length > 0 && (
+                          <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{rest.join(' ')}</p>
+                        )}
+                      </div>
+                    );
+                  }
+                  return <p key={i} className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 leading-relaxed mb-4">{paragraph}</p>;
+                })}
+              </div>
+            </div>
           </main>
 
           <Navigation />

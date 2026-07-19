@@ -1,6 +1,8 @@
 import {
   AirQuality,
+  Astronomy,
   DailyForecast,
+  HourlyForecast,
   IAirQualityRepository,
   ILocationRepository,
   IWeatherRepository,
@@ -26,9 +28,9 @@ export class OpenMeteoWeatherRepository implements IWeatherRepository {
     const params = new URLSearchParams({
       latitude: latitude.toString(),
       longitude: longitude.toString(),
-      current: "temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure",
-      hourly: "temperature_2m,weather_code,precipitation_probability",
-      daily: "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max",
+      current: "temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure,uv_index,visibility,dew_point_2m,cloud_cover",
+      hourly: "temperature_2m,weather_code,precipitation_probability,relative_humidity_2m,wind_speed_10m,visibility,cloud_cover,is_day",
+      daily: "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,sunrise,sunset,uv_index_max",
       timezone: "auto",
     });
 
@@ -44,6 +46,11 @@ export class OpenMeteoWeatherRepository implements IWeatherRepository {
     const hourly = data.hourly;
     const daily = data.daily;
 
+    const astronomy: Astronomy | undefined =
+      daily.sunrise?.[0] && daily.sunset?.[0]
+        ? { sunrise: daily.sunrise[0], sunset: daily.sunset[0] }
+        : undefined;
+
     const weather: Weather = {
       current: {
         temperature: current.temperature_2m,
@@ -53,6 +60,10 @@ export class OpenMeteoWeatherRepository implements IWeatherRepository {
         humidity: current.relative_humidity_2m,
         pressure: current.surface_pressure,
         feelsLike: current.apparent_temperature,
+        uvIndex: current.uv_index,
+        visibility: current.visibility,
+        dewPoint: current.dew_point_2m,
+        cloudCover: current.cloud_cover,
         isDay: current.is_day === 1,
         time: current.time,
       },
@@ -62,13 +73,21 @@ export class OpenMeteoWeatherRepository implements IWeatherRepository {
         minTemp: daily.temperature_2m_min[index],
         condition: mapWeatherCode(daily.weather_code[index]),
         rainChance: daily.precipitation_probability_max[index],
+        sunrise: daily.sunrise?.[index],
+        sunset: daily.sunset?.[index],
+        uvIndexMax: daily.uv_index_max?.[index],
       })).slice(0, 7),
       hourly: hourly.time.map((time: string, index: number) => ({
         time: time,
         temperature: hourly.temperature_2m[index],
         condition: mapWeatherCode(hourly.weather_code[index]),
         rainChance: hourly.precipitation_probability[index],
+        humidity: hourly.relative_humidity_2m?.[index],
+        windSpeed: hourly.wind_speed_10m?.[index],
+        visibility: hourly.visibility?.[index],
+        cloudCover: hourly.cloud_cover?.[index],
       })).slice(0, 24),
+      astronomy,
     };
 
     return weather;

@@ -1,13 +1,25 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { LanguageProvider } from "@/components/language-provider";
+import { LocationProvider } from "@/components/location-provider";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Weather Dashboard",
-  description: "A clean architecture weather app",
+  description: "A modern weather application with real-time data",
+  icons: {
+    icon: "/favicon.ico",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0B0C15" },
+  ],
 };
 
 export default function RootLayout({
@@ -17,14 +29,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
-      </head>
-      <body className={`${outfit.className} antialiased bg-gray-100 dark:bg-[#0B0C15] transition-colors duration-300`}>
+      <body className={`${outfit.className} antialiased bg-gray-100 dark:bg-[#0B0C15]`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {children}
+          <LanguageProvider>
+            <LocationProvider>
+              {children}
+            </LocationProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>
