@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { Loading } from "@/components/Loading";
+import { Weather } from "@/core/domain";
 import { useLanguage } from "@/components/language-provider";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -22,7 +23,7 @@ export default function ForecastPage() {
     if (!location) return;
     async function fetchWeather() {
       try {
-        const res = await fetch(`/api/weather?lat=${location.latitude}&lon=${location.longitude}`);
+        const res = await fetch(`/api/weather?lat=${location?.latitude}&lon=${location?.longitude}`);
         const data = await res.json();
         setWeather(data);
       } finally {

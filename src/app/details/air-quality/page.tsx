@@ -22,7 +22,7 @@ export default function AirQualityPage() {
     if (!location) return;
     async function fetchAQ() {
       try {
-        const res = await fetch(`/api/air-quality?lat=${location.latitude}&lon=${location.longitude}`);
+        const res = await fetch(`/api/air-quality?lat=${location?.latitude}&lon=${location?.longitude}`);
         const data = await res.json();
         setAq(data);
       } finally {

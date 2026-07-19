@@ -47,7 +47,7 @@ export default function Home() {
     async function fetchWeather() {
       setLoading(true);
       try {
-        const res = await fetch(`/api/weather?lat=${location.latitude}&lon=${location.longitude}`);
+        const res = await fetch(`/api/weather?lat=${location?.latitude}&lon=${location?.longitude}`);
         if (res.ok) {
           const data = await res.json();
           setWeather(data);

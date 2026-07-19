@@ -23,7 +23,7 @@ export default function RainDetailPage() {
     if (!location) return;
     async function fetchWeather() {
       try {
-        const res = await fetch(`/api/weather?lat=${location.latitude}&lon=${location.longitude}`);
+        const res = await fetch(`/api/weather?lat=${location?.latitude}&lon=${location?.longitude}`);
         const data = await res.json();
         setWeather(data);
       } finally {
