@@ -7,21 +7,22 @@ import { Loading } from "@/components/Loading";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/components/language-provider";
 import { motion } from "framer-motion";
+import { ArrowLeft } from "lucide-react";
+
+import { useLocation } from "@/components/location-provider";
 
 export default function AirQualityPage() {
+  const { location, loading: locationLoading } = useLocation();
   const [aq, setAq] = useState<AirQuality | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const { t } = useLanguage();
 
-  // Default Jakarta
-  const lat = -6.2088;
-  const lon = 106.8456;
-
   useEffect(() => {
+    if (!location) return;
     async function fetchAQ() {
       try {
-        const res = await fetch(`/api/air-quality?lat=${lat}&lon=${lon}`);
+        const res = await fetch(`/api/air-quality?lat=${location.latitude}&lon=${location.longitude}`);
         const data = await res.json();
         setAq(data);
       } finally {
@@ -29,9 +30,9 @@ export default function AirQualityPage() {
       }
     }
     fetchAQ();
-  }, []);
+  }, [location]);
 
-  if (loading) return <Loading />;
+  if (loading || locationLoading) return <Loading />;
 
   return (
     <div className="min-h-screen flex justify-center font-sans transition-colors duration-300 md:p-8 relative">
@@ -43,11 +44,11 @@ export default function AirQualityPage() {
       >
          <header className="p-4 sm:p-6 flex items-center gap-3 sm:gap-4 sticky top-0 z-20 bg-white/80 dark:bg-[#0B0C15]/80 backdrop-blur-md">
             <button onClick={() => router.back()} className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gray-100 dark:bg-[#1E1F29] flex items-center justify-center hover:bg-gray-200 dark:hover:bg-[#2B2D3A] transition-colors cursor-pointer">
-              <span className="material-icons text-gray-600 dark:text-gray-300 text-sm sm:text-base">arrow_back</span>
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-300" />
             </button>
             <h1 className="font-semibold text-base sm:text-lg dark:text-white">{t('air_quality')}</h1>
          </header>
-         <main className="flex-1 p-4 sm:p-6 flex flex-col items-center justify-center text-center overflow-y-auto pb-24 hide-scroll">
+         <main className="flex-1 p-4 sm:p-6 flex flex-col items-center justify-center text-center overflow-y-auto pb-32 hide-scroll">
             {aq && (
                 <>
                     <motion.div
@@ -64,9 +65,9 @@ export default function AirQualityPage() {
                     </motion.div>
                     <h2 className="text-2xl sm:text-3xl font-bold dark:text-white mb-2">{aq.description}</h2>
                     <p className="text-sm text-gray-500 max-w-xs mx-auto mb-6 sm:mb-8">
-                        {aq.aqi <= 50 ? "Air quality is satisfactory, and air pollution poses little or no risk." :
-                         aq.aqi <= 100 ? "Air quality is acceptable. However, there may be a risk for some people." :
-                         "Members of sensitive groups may experience health effects. The general public is less likely to be affected."}
+                        {aq.aqi <= 50 ? t('aqi_desc_good') :
+                         aq.aqi <= 100 ? t('aqi_desc_moderate') :
+                         t('aqi_desc_unhealthy')}
                     </p>
 
                     <div className="grid grid-cols-2 gap-3 sm:gap-4 w-full max-w-sm">

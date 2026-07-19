@@ -6,6 +6,7 @@ import { Sun, Cloud, CloudRain, Snowflake, Zap, CloudFog } from "lucide-react";
 
 interface ForecastRowProps {
   hourly: HourlyForecast[];
+  currentTime: string;
 }
 
 function getConditionIcon(condition: string) {
@@ -18,18 +19,20 @@ function getConditionIcon(condition: string) {
   return <Sun size={20} className="text-yellow-500" />;
 }
 
-export function ForecastRow({ hourly }: ForecastRowProps) {
+export function ForecastRow({ hourly, currentTime }: ForecastRowProps) {
   const { t } = useLanguage();
 
-  // Show next 24 hours from current hour
-  const now = new Date();
+  // Show next 24 hours from current location time
+  const now = new Date(currentTime);
   const currentHour = now.getHours();
   const upcoming = hourly.filter(h => {
-    const hHour = new Date(h.time).getHours();
-    const hDate = new Date(h.time).toDateString();
-    const today = now.toDateString();
-    if (hDate === today) return hHour >= currentHour;
-    return true;
+    const hTime = new Date(h.time).getTime();
+    // Keep hours that are at or after the current hour
+    // Since we have 48 hours of data starting from 00:00 of current day, we can just filter by time
+    // But since current time might be e.g. 14:15, and h.time is 14:00, we want to include 14:00.
+    // So we subtract some minutes to ensure current hour is included.
+    const hDate = new Date(h.time);
+    return hDate.getTime() >= now.getTime() - (now.getMinutes() * 60000);
   }).slice(0, 24);
 
   return (

@@ -4,6 +4,7 @@ import { Navigation } from "@/components/Navigation";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/components/language-provider";
 import { motion } from "framer-motion";
+import { ArrowLeft, Sun } from "lucide-react";
 
 export default function AboutAppPage() {
   const router = useRouter();
@@ -22,12 +23,12 @@ export default function AboutAppPage() {
               onClick={() => router.back()}
               className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gray-100 dark:bg-[#1E1F29] flex items-center justify-center hover:bg-gray-200 dark:hover:bg-[#2B2D3A] transition-colors cursor-pointer"
             >
-              <span className="material-icons text-gray-600 dark:text-gray-300 text-sm sm:text-base">arrow_back</span>
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-300" />
             </button>
             <h1 className="font-semibold text-base sm:text-lg dark:text-white">{t('about_title')}</h1>
           </header>
 
-          <main className="flex-1 p-4 sm:p-6 overflow-y-auto pb-24 hide-scroll">
+          <main className="flex-1 p-4 sm:p-6 overflow-y-auto pb-32 hide-scroll">
             <div className="max-w-3xl mx-auto">
               {/* App Icon */}
               <motion.div
@@ -37,7 +38,7 @@ export default function AboutAppPage() {
                 className="flex flex-col items-center mb-6 sm:mb-8"
               >
                 <div className="w-20 h-20 sm:w-24 sm:h-24 bg-[#B2DAFF] rounded-3xl flex items-center justify-center mb-4 shadow-lg">
-                  <span className="material-icons text-4xl sm:text-5xl text-gray-900">wb_sunny</span>
+                  <Sun className="w-10 h-10 sm:w-12 sm:h-12 text-gray-900" />
                 </div>
                 <h2 className="text-xl sm:text-2xl font-bold dark:text-white">Weather Dashboard</h2>
                 <p className="text-xs sm:text-sm text-gray-500 mt-1">{t('version')}</p>

@@ -11,16 +11,16 @@ export function Loading() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-[#0B0C15] gap-6">
       <div className="relative w-24 h-24 flex items-center justify-center">
         <motion.div
-          animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.6, 0.3] }}
+          animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.5, 0.2] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute inset-0 bg-[#B2DAFF] rounded-full blur-2xl"
+          className="absolute inset-0 bg-blue-400 dark:bg-blue-600 rounded-full blur-2xl"
         />
         <motion.div
-          animate={{ rotate: [0, 10, -10, 0], y: [-3, 3, -3] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          animate={{ rotate: [-5, 5, -5], y: [-5, 5, -5] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           className="relative z-10"
         >
-          <CloudSun size={48} className="text-[#B2DAFF]" />
+          <CloudSun size={56} strokeWidth={1.5} className="text-blue-500 dark:text-blue-400 drop-shadow-lg" />
         </motion.div>
       </div>
       <motion.p

@@ -95,6 +95,18 @@ export const translations = {
     moderate_rain: "Moderate rain",
     heavy_rain: "Heavy rain",
     time: "Time",
+    average: "Average",
+    maximum: "Maximum",
+    minimum: "Minimum",
+    tips: "💡 Tips",
+    rain_tip_high: "☔ High chance of rain today. Don't forget to bring an umbrella!",
+    rain_tip_slight: "🌤️ Slight chance of rain. Consider bringing a light raincoat just in case.",
+    rain_tip_none: "☀️ No significant rain expected. Enjoy your day!",
+
+    // Air Quality descriptions
+    aqi_desc_good: "Air quality is satisfactory, and air pollution poses little or no risk.",
+    aqi_desc_moderate: "Air quality is acceptable. However, there may be a risk for some people.",
+    aqi_desc_unhealthy: "Members of sensitive groups may experience health effects. The general public is less likely to be affected.",
 
     // General
     search_city: "Search city...",
@@ -110,6 +122,9 @@ export const translations = {
     deny: "Deny",
     using_default: "Using default location",
     retry: "Retry",
+    explore_map_desc: "Explore wind, weather and ocean conditions.",
+    detail_placeholder: "Detailed information about this will appear here.",
+    unknown: "Unknown",
 
     // Map page weather info
     feels_like: "Feels Like",
@@ -304,6 +319,18 @@ Developed with ❤️ for weather enthusiasts everywhere.`,
     moderate_rain: "Hujan sedang",
     heavy_rain: "Hujan lebat",
     time: "Waktu",
+    average: "Rata-rata",
+    maximum: "Maksimum",
+    minimum: "Minimum",
+    tips: "💡 Tips",
+    rain_tip_high: "☔ Peluang hujan tinggi hari ini. Jangan lupa bawa payung!",
+    rain_tip_slight: "🌤️ Peluang hujan kecil. Siapkan jas hujan tipis untuk berjaga-jaga.",
+    rain_tip_none: "☀️ Tidak ada hujan yang diperkirakan. Selamat beraktivitas!",
+
+    // Air Quality descriptions
+    aqi_desc_good: "Kualitas udara memuaskan, dan polusi udara menimbulkan sedikit atau tidak ada risiko.",
+    aqi_desc_moderate: "Kualitas udara dapat diterima. Namun, mungkin ada risiko bagi beberapa orang.",
+    aqi_desc_unhealthy: "Anggota kelompok sensitif mungkin mengalami efek kesehatan. Masyarakat umum cenderung tidak terpengaruh.",
 
     // General
     search_city: "Cari kota...",
@@ -319,6 +346,9 @@ Developed with ❤️ for weather enthusiasts everywhere.`,
     deny: "Tolak",
     using_default: "Menggunakan lokasi default",
     retry: "Coba Lagi",
+    explore_map_desc: "Jelajahi angin, cuaca, dan kondisi laut.",
+    detail_placeholder: "Informasi rinci tentang ini akan muncul di sini.",
+    unknown: "Tidak Diketahui",
 
     // Map page weather info
     feels_like: "Terasa",

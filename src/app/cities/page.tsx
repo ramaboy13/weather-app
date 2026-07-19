@@ -5,6 +5,7 @@ import { Navigation } from "@/components/Navigation";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/components/language-provider";
 import { motion } from "framer-motion";
+import { ArrowLeft, Search, ChevronRight } from "lucide-react";
 
 const INDONESIAN_CITIES = [
     { name: "Jakarta", region: "DKI Jakarta", country: "Indonesia", lat: -6.2088, lon: 106.8456 },
@@ -39,14 +40,14 @@ export default function CitiesPage() {
       >
          <header className="p-4 sm:p-6 flex items-center gap-3 sm:gap-4 sticky top-0 z-20 bg-white/80 dark:bg-[#0B0C15]/80 backdrop-blur-md">
             <button onClick={() => router.back()} className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gray-100 dark:bg-[#1E1F29] flex items-center justify-center hover:bg-gray-200 dark:hover:bg-[#2B2D3A] transition-colors cursor-pointer">
-              <span className="material-icons text-gray-600 dark:text-gray-300 text-sm sm:text-base">arrow_back</span>
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-300" />
             </button>
             <h1 className="font-semibold text-base sm:text-lg dark:text-white">{t('cities')}</h1>
          </header>
 
          <div className="px-4 sm:px-6 mb-3 sm:mb-4">
              <div className="relative group w-full">
-                <span className="material-icons absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg sm:text-xl">search</span>
+                <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                 <input
                     className="w-full bg-gray-100 dark:bg-[#1E1F29] rounded-xl sm:rounded-2xl py-2.5 sm:py-3 pl-10 sm:pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-[#B2DAFF] transition-all border-none dark:text-white"
                     placeholder={t('filter_cities')}
@@ -56,7 +57,7 @@ export default function CitiesPage() {
              </div>
          </div>
 
-         <main className="flex-1 p-4 sm:p-6 overflow-y-auto pb-24 hide-scroll">
+         <main className="flex-1 p-4 sm:p-6 overflow-y-auto pb-32 hide-scroll">
             <div className="space-y-3 sm:space-y-4">
                 {filteredCities.map((city, i) => (
                     <motion.div
@@ -73,7 +74,7 @@ export default function CitiesPage() {
                                 <p className="text-[10px] sm:text-xs text-gray-500">{city.region}, {city.country}</p>
                             </div>
                         </div>
-                        <span className="material-icons text-gray-400 text-sm sm:text-base">chevron_right</span>
+                        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                     </motion.div>
                 ))}
             </div>

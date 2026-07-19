@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Header } from "@/components/Header";
 import { Search } from "@/components/Search";
 import { CurrentWeather } from "@/components/CurrentWeather";
@@ -22,14 +22,7 @@ import { Wind, Droplets, ArrowRight } from "lucide-react";
 export default function Home() {
   const { location: geoLocation, loading: locationLoading } = useLocation();
   const [weather, setWeather] = useState<Weather | null>(null);
-  const [location, setLocation] = useState<Location>({
-    id: "jakarta",
-    name: "Jakarta",
-    region: "DKI Jakarta",
-    country: "Indonesia",
-    latitude: -6.2088,
-    longitude: 106.8456
-  });
+  const [location, setLocation] = useState<Location | null>(null);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<'today' | 'tomorrow' | 'week'>('today');
   const router = useRouter();
@@ -50,6 +43,7 @@ export default function Home() {
   }, [geoLocation]);
 
   useEffect(() => {
+    if (!location) return;
     async function fetchWeather() {
       setLoading(true);
       try {
@@ -68,7 +62,7 @@ export default function Home() {
     fetchWeather();
   }, [location]);
 
-  if ((loading || locationLoading) && !weather) {
+  if (locationLoading || !location) {
     return <Loading />;
   }
 
@@ -89,7 +83,7 @@ export default function Home() {
              <Search onLocationSelect={setLocation} />
           </div>
 
-          <main className="flex-1 overflow-y-auto px-4 sm:px-6 pb-24 hide-scroll">
+          <main className="flex-1 overflow-y-auto px-4 sm:px-6 pb-32 hide-scroll">
              <div className="flex items-center gap-4 sm:gap-6 mb-4 sm:mb-6 text-sm font-medium">
                <button
                   onClick={() => setView('today')}
@@ -113,19 +107,24 @@ export default function Home() {
 
              {weather && (
                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-                 <div className="lg:col-span-2 space-y-6 sm:space-y-8">
-                    <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
+                 <div className="lg:col-span-2 space-y-6 sm:space-y-8 min-w-0">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1, duration: 0.4 }}
+                      className="flex-shrink-0"
+                    >
                         <CurrentWeather weather={weather} />
                     </motion.div>
                     <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
-                        <ForecastRow hourly={weather.hourly} />
+                        <ForecastRow hourly={weather.hourly} currentTime={weather.current.time} />
                     </motion.div>
                  </div>
 
                  <div className="lg:col-span-1 space-y-6 sm:space-y-8">
                     <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
                         <Link href="/details/rain" className="block hover:scale-[1.02] transition-transform cursor-pointer">
-                            <ChanceOfRain hourly={weather.hourly} />
+                            <ChanceOfRain hourly={weather.hourly} currentTime={weather.current.time} />
                         </Link>
                     </motion.div>
 

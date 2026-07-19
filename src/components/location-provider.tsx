@@ -47,7 +47,7 @@ function getCachedLocation(): LocationData | null {
   try {
     const cached = localStorage.getItem(CACHE_KEY);
     if (!cached) return null;
-    const data = JSON.parse(cached) as LocationData;
+    const data = JSON.parse(atob(cached)) as LocationData;
     if (Date.now() - data.timestamp > CACHE_DURATION) return null;
     return data;
   } catch {
@@ -57,7 +57,7 @@ function getCachedLocation(): LocationData | null {
 
 function cacheLocation(loc: LocationData) {
   try {
-    localStorage.setItem(CACHE_KEY, JSON.stringify(loc));
+    localStorage.setItem(CACHE_KEY, btoa(JSON.stringify(loc)));
   } catch {
     // Storage full or unavailable
   }
@@ -65,11 +65,20 @@ function cacheLocation(loc: LocationData) {
 
 async function reverseGeocode(lat: number, lon: number): Promise<Partial<LocationData>> {
   try {
-    const res = await fetch(
-      `https://geocoding-api.open-meteo.com/v1/search?name=&latitude=${lat}&longitude=${lon}&count=1`
-    );
-    // Open-Meteo geocoding doesn't support reverse geocoding directly
-    // Use Nominatim instead
+    // Use Open-Meteo for getting population if possible by searching nearby
+    let population: number | undefined;
+    try {
+      const omRes = await fetch(
+        `https://geocoding-api.open-meteo.com/v1/search?name=&latitude=${lat}&longitude=${lon}&count=1`
+      );
+      if (omRes.ok) {
+        const omData = await omRes.json();
+        if (omData.results && omData.results.length > 0) {
+            population = omData.results[0].population;
+        }
+      }
+    } catch {}
+
     const nomRes = await fetch(
       `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=en`
     );
@@ -80,6 +89,7 @@ async function reverseGeocode(lat: number, lon: number): Promise<Partial<Locatio
         region: data.address?.state || data.address?.province || "",
         country: data.address?.country || "Unknown",
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        population,
       };
     }
   } catch {
@@ -151,6 +161,7 @@ export function LocationProvider({ children }: { children: ReactNode }) {
         region: geoData.region || "",
         country: geoData.country || "Unknown",
         timezone: geoData.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+        population: geoData.population,
         timestamp: Date.now(),
       };
 

@@ -4,6 +4,7 @@ import { Navigation } from "@/components/Navigation";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/components/language-provider";
 import { motion } from "framer-motion";
+import { ArrowLeft } from "lucide-react";
 
 export default function TermsOfServicePage() {
   const router = useRouter();
@@ -22,12 +23,12 @@ export default function TermsOfServicePage() {
               onClick={() => router.back()}
               className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gray-100 dark:bg-[#1E1F29] flex items-center justify-center hover:bg-gray-200 dark:hover:bg-[#2B2D3A] transition-colors cursor-pointer"
             >
-              <span className="material-icons text-gray-600 dark:text-gray-300 text-sm sm:text-base">arrow_back</span>
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-300" />
             </button>
             <h1 className="font-semibold text-base sm:text-lg dark:text-white">{t('tos_title')}</h1>
           </header>
 
-          <main className="flex-1 p-4 sm:p-6 overflow-y-auto pb-24 hide-scroll">
+          <main className="flex-1 p-4 sm:p-6 overflow-y-auto pb-32 hide-scroll">
             <div className="max-w-3xl mx-auto">
               <p className="text-xs text-gray-400 mb-4 sm:mb-6">{t('tos_last_updated')}</p>
               <div className="prose prose-sm dark:prose-invert max-w-none">

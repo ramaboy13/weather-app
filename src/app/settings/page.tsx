@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { Moon, Globe, ChevronRight, Shield, FileText, Info } from "lucide-react";
 
 export default function SettingsPage() {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const { locale, setLocale, t } = useLanguage();
   const router = useRouter();
@@ -32,7 +32,7 @@ export default function SettingsPage() {
          <header className="p-4 sm:p-6 flex items-center gap-3 sm:gap-4 sticky top-0 z-20 bg-white/80 dark:bg-[#0B0C15]/80 backdrop-blur-md">
             <h1 className="font-semibold text-base sm:text-lg dark:text-white">{t('settings')}</h1>
          </header>
-         <main className="flex-1 p-4 sm:p-6 space-y-4 sm:space-y-6 overflow-y-auto pb-24 hide-scroll">
+         <main className="flex-1 p-4 sm:p-6 space-y-4 sm:space-y-6 overflow-y-auto pb-32 hide-scroll">
 
             {/* Appearance Section */}
             <motion.section
@@ -49,9 +49,9 @@ export default function SettingsPage() {
                     </div>
                     <button
                         onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                        className={`w-11 sm:w-12 h-5 sm:h-6 rounded-full p-1 transition-colors cursor-pointer ${theme === 'dark' ? 'bg-[#B2DAFF]' : 'bg-gray-300'}`}
+                        className={`w-11 sm:w-12 h-5 sm:h-6 rounded-full p-1 transition-colors cursor-pointer ${resolvedTheme === 'dark' ? 'bg-[#B2DAFF]' : 'bg-gray-300'}`}
                     >
-                        <div className={`w-3.5 sm:w-4 h-3.5 sm:h-4 rounded-full bg-white shadow-md transform transition-transform ${theme === 'dark' ? 'translate-x-5 sm:translate-x-6' : ''}`}></div>
+                        <div className={`w-3.5 sm:w-4 h-3.5 sm:h-4 rounded-full bg-white shadow-md transform transition-transform ${resolvedTheme === 'dark' ? 'translate-x-5 sm:translate-x-6' : ''}`}></div>
                     </button>
                 </div>
             </motion.section>

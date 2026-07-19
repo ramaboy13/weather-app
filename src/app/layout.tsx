@@ -8,10 +8,16 @@ import { LocationProvider } from "@/components/location-provider";
 const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Weather Dashboard",
-  description: "A modern weather application with real-time data",
-  icons: {
-    icon: "/favicon.ico",
+  title: "Aura Weather",
+  description: "A premium weather application with real-time data",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Aura Weather",
+  },
+  formatDetection: {
+    telephone: false,
   },
 };
 
@@ -30,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${outfit.className} antialiased bg-gray-100 dark:bg-[#0B0C15]`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <LanguageProvider>
             <LocationProvider>
               {children}

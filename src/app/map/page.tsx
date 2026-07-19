@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/components/language-provider";
 import { useLocation } from "@/components/location-provider";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Radar, Droplets, Wind, Gauge, Thermometer, Eye, ChevronDown, ChevronUp, CloudRain } from "lucide-react";
+import { ArrowLeft, Radar, Droplets, Wind, Gauge, ChevronDown, ChevronUp, Waves, Sun, Cloud, CloudRain, Moon, CloudLightning } from "lucide-react";
 
 const MapComponent = dynamic(() => import("@/components/map/Map"), {
   ssr: false,
@@ -70,7 +70,7 @@ export default function MapPage() {
                    {/* Header */}
                    <div className="flex justify-between items-center p-3 sm:p-4 border-b border-gray-100 dark:border-gray-800">
                      <div className="flex items-center gap-2">
-                       <span className="material-icons text-blue-500 text-sm sm:text-base">radar</span>
+                       <Radar className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
                        <span className="font-bold text-xs sm:text-sm dark:text-white">{t('live_radar')}</span>
                      </div>
                      <div className="flex items-center gap-2">
@@ -79,9 +79,7 @@ export default function MapPage() {
                          onClick={() => setShowInfo(!showInfo)}
                          className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center cursor-pointer"
                        >
-                         <span className="material-icons text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-                           {showInfo ? 'expand_more' : 'expand_less'}
-                         </span>
+                         {showInfo ? <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-300" /> : <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600 dark:text-gray-300" />}
                        </button>
                      </div>
                    </div>
@@ -95,14 +93,14 @@ export default function MapPage() {
                      >
                        {/* Main weather info */}
                        <div className="flex items-center justify-between mb-3 sm:mb-4">
-                         <div className="flex items-center gap-3">
-                           <span className="material-icons text-3xl sm:text-4xl text-yellow-500">
-                             {weather.current.condition.toLowerCase().includes("rain") ? "water_drop" :
-                              weather.current.condition.toLowerCase().includes("cloud") ? "cloud" :
-                              weather.current.condition.toLowerCase().includes("thunder") ? "flash_on" :
-                              weather.current.isDay ? "wb_sunny" : "nights_stay"}
-                           </span>
-                           <div>
+                          <div className="flex items-center gap-3">
+                             <div className="flex flex-col items-center">
+                              {weather.current.condition.toLowerCase().includes("rain") ? <CloudRain className="w-8 h-8 sm:w-10 sm:h-10 text-blue-500" /> :
+                               weather.current.condition.toLowerCase().includes("cloud") ? <Cloud className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" /> :
+                               weather.current.condition.toLowerCase().includes("thunder") ? <CloudLightning className="w-8 h-8 sm:w-10 sm:h-10 text-purple-500" /> :
+                               weather.current.isDay ? <Sun className="w-8 h-8 sm:w-10 sm:h-10 text-yellow-500" /> : <Moon className="w-8 h-8 sm:w-10 sm:h-10 text-gray-300" />}
+                             </div>
+                            <div>
                              <div className="text-2xl sm:text-3xl font-bold dark:text-white">{Math.round(weather.current.temperature)}°C</div>
                              <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">{weather.current.condition}</div>
                            </div>
@@ -117,7 +115,7 @@ export default function MapPage() {
                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
                          <div className="bg-gray-50 dark:bg-[#2B2D3A] rounded-xl sm:rounded-2xl p-2.5 sm:p-3">
                            <div className="flex items-center gap-1.5 mb-1">
-                             <span className="material-icons text-blue-400 text-xs sm:text-sm">water_drop</span>
+                             <Droplets className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
                              <span className="text-[10px] sm:text-xs text-gray-500">{t('humidity')}</span>
                            </div>
                            <div className="font-bold text-sm sm:text-base dark:text-white">{weather.current.humidity}%</div>
@@ -125,7 +123,7 @@ export default function MapPage() {
 
                          <div className="bg-gray-50 dark:bg-[#2B2D3A] rounded-xl sm:rounded-2xl p-2.5 sm:p-3">
                            <div className="flex items-center gap-1.5 mb-1">
-                             <span className="material-icons text-green-400 text-xs sm:text-sm">air</span>
+                             <Wind className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
                              <span className="text-[10px] sm:text-xs text-gray-500">{t('wind_speed')}</span>
                            </div>
                            <div className="font-bold text-sm sm:text-base dark:text-white">{weather.current.windSpeed} km/h</div>
@@ -134,7 +132,7 @@ export default function MapPage() {
 
                          <div className="bg-gray-50 dark:bg-[#2B2D3A] rounded-xl sm:rounded-2xl p-2.5 sm:p-3">
                            <div className="flex items-center gap-1.5 mb-1">
-                             <span className="material-icons text-purple-400 text-xs sm:text-sm">compress</span>
+                             <Gauge className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
                              <span className="text-[10px] sm:text-xs text-gray-500">{t('pressure')}</span>
                            </div>
                            <div className="font-bold text-sm sm:text-base dark:text-white">{Math.round(weather.current.pressure)} hPa</div>
@@ -142,7 +140,7 @@ export default function MapPage() {
 
                          <div className="bg-gray-50 dark:bg-[#2B2D3A] rounded-xl sm:rounded-2xl p-2.5 sm:p-3">
                            <div className="flex items-center gap-1.5 mb-1">
-                             <span className="material-icons text-orange-400 text-xs sm:text-sm">water</span>
+                             <Waves className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400" />
                              <span className="text-[10px] sm:text-xs text-gray-500">{t('rain_probability')}</span>
                            </div>
                            <div className="font-bold text-sm sm:text-base dark:text-white">
@@ -156,7 +154,7 @@ export default function MapPage() {
                          <div className="mt-2 sm:mt-3 bg-gray-50 dark:bg-[#2B2D3A] rounded-xl sm:rounded-2xl p-2.5 sm:p-3">
                            <div className="flex items-center justify-between">
                              <div className="flex items-center gap-2">
-                               <span className="material-icons text-teal-400 text-sm sm:text-base">air</span>
+                               <Wind className="w-4 h-4 sm:w-5 sm:h-5 text-teal-400" />
                                <div>
                                  <span className="text-xs sm:text-sm font-medium dark:text-white">{t('air_quality')}</span>
                                  <span className="text-[10px] sm:text-xs text-gray-500 ml-2">{weather.airQuality.description}</span>

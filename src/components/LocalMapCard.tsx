@@ -17,7 +17,7 @@ export function LocalMapCard() {
         <div className="flex justify-between items-end">
           <div>
             <h3 className="font-bold text-white text-base sm:text-lg">{t('weather_map')}</h3>
-            <p className="text-gray-300 text-[10px] sm:text-xs mt-1">Explore wind, weather and ocean conditions.</p>
+            <p className="text-gray-300 text-[10px] sm:text-xs mt-1">{t('explore_map_desc')}</p>
           </div>
           <div className="w-9 h-9 sm:w-10 sm:h-10 bg-[#B2DAFF] rounded-full flex items-center justify-center text-gray-900 shadow-lg transform group-hover:scale-110 transition-transform">
             <Navigation size={16} />

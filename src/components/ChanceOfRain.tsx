@@ -5,10 +5,16 @@ import { CloudRain } from "lucide-react";
 
 interface ChanceOfRainProps {
   hourly: HourlyForecast[];
+  currentTime: string;
 }
 
-export function ChanceOfRain({ hourly }: ChanceOfRainProps) {
-  const data = hourly.slice(0, 6);
+export function ChanceOfRain({ hourly, currentTime }: ChanceOfRainProps) {
+  const now = new Date(currentTime);
+  const upcoming = hourly.filter(h => {
+    const hDate = new Date(h.time);
+    return hDate.getTime() >= now.getTime() - (now.getMinutes() * 60000);
+  });
+  const data = upcoming.slice(0, 6);
   const { t } = useLanguage();
 
   return (
@@ -22,7 +28,7 @@ export function ChanceOfRain({ hourly }: ChanceOfRainProps) {
       </div>
       <div className="flex items-end justify-between h-28 sm:h-32 gap-1 sm:gap-2">
         {data.map((item, i) => (
-          <div key={i} className="flex flex-col items-center gap-1 sm:gap-2 w-full">
+          <div key={i} className="flex flex-col items-center gap-1 sm:gap-2 w-full group cursor-pointer" title={`${item.rainChance}% chance of rain at ${new Date(item.time).getHours()}:00`}>
             {item.rainChance > 0 && (
               <span className="text-[9px] sm:text-[10px] font-medium text-blue-500 dark:text-blue-400">
                 {item.rainChance}%

@@ -3,7 +3,7 @@
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // Fix leaflet icon
 const icon = L.icon({
@@ -28,6 +28,24 @@ function ChangeView({ center }: { center: [number, number] }) {
 }
 
 export default function MapComponent({ lat, lon }: MapProps) {
+  const [radarPath, setRadarPath] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchRadar() {
+      try {
+        const res = await fetch("https://api.rainviewer.com/public/weather-maps.json");
+        const data = await res.json();
+        const latest = data.radar.past[data.radar.past.length - 1];
+        if (latest) {
+          setRadarPath(`${data.host}${latest.path}/256/{z}/{x}/{y}/2/1_1.png`);
+        }
+      } catch (err) {
+        console.error("Failed to fetch RainViewer radar", err);
+      }
+    }
+    fetchRadar();
+  }, []);
+
   return (
     <MapContainer center={[lat, lon]} zoom={10} style={{ height: "100%", width: "100%" }}>
       <ChangeView center={[lat, lon]} />
@@ -35,15 +53,15 @@ export default function MapComponent({ lat, lon }: MapProps) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {/* Weather Layer (Precipitation) - OpenWeatherMap needs key, using standard OSM for base.
-          To satisfy "clouds, rain movement", we would need a specific weather tile provider.
-          For this scope without paid keys, we use standard tiles but conceptually this is where the weather layer goes.
-      */}
-      <TileLayer
-         attribution="RainViewer"
-         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-         opacity={0.5}
-      />
+      {radarPath && (
+        <TileLayer
+           attribution="RainViewer"
+           url={radarPath}
+           opacity={0.6}
+           zIndex={10}
+           maxNativeZoom={7}
+        />
+      )}
       <Marker position={[lat, lon]} icon={icon}>
         <Popup>
           Current Location

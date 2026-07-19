@@ -86,7 +86,7 @@ export class OpenMeteoWeatherRepository implements IWeatherRepository {
         windSpeed: hourly.wind_speed_10m?.[index],
         visibility: hourly.visibility?.[index],
         cloudCover: hourly.cloud_cover?.[index],
-      })).slice(0, 24),
+      })).slice(0, 48),
       astronomy,
     };
 

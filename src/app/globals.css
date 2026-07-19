@@ -3,6 +3,10 @@
 /* Enable class-based dark mode for next-themes */
 @variant dark (&:is(.dark *));
 
+body {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
 @theme {
   --color-primary: #B2DAFF;
   --color-primary-dark: #1E293B;
